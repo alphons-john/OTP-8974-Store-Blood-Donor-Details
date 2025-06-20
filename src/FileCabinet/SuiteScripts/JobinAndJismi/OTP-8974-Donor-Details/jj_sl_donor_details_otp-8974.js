@@ -3,7 +3,7 @@
  * @NScriptType Suitelet
  */
 /**********************************************************************************************
-* 
+************
 *
 *
 *
@@ -16,14 +16,17 @@ ${OTP-8974}:{Custom form to store blood donor details and track them in database
 *
 *Date Created:17-June-2025
 *
-*Description:This script is developed to create a custom form to fetch the details of blood donors – donor name(first name, last name), phone
-*number, blood group, gender and the most recent blood donation date. After the user clicks on the ‘Submit Donor Data’ button,  a custom record
+*Description:This script is developed to create a custom form to fetch the details of blood donors –
+*donor name(first name, last name), phone number, blood group, gender and the most recent blood 
+*donation date. After the user clicks on the ‘Submit Donor Data’ button,  a custom record
 *will be created in NetSuite to store the form data. 
 *
 ** REVISION HISTORY
  *
 * @version 1.0 17-June-2025 : Created the initial build by JJ0403
-*/
+***************************************************************************************************
+*************/
+
 define(['N/log', 'N/record', 'N/ui/serverWidget', 'N/search'],
     /**
      * @param{log} log
@@ -115,57 +118,70 @@ define(['N/log', 'N/record', 'N/ui/serverWidget', 'N/search'],
         };
 
         function convertDate(date) {
-            let dateObj = new Date(date);
-            let month = dateObj.getMonth() + 1;
-            let day = dateObj.getDate();
-            let year = dateObj.getFullYear();
+            try {
+                let convertdate = new Date(date);
+                let convertmonth = convertdate.getMonth() + 1;
+                let convertday = convertdate.getDate();
+                let convertyear = convertdate.getFullYear();
 
-            let newMonth = month < 10 ? "0" + month.toString() : month.toString();
-            let newDay = day < 10 ? "0" + day.toString() : day.toString();
+                let newMonth = convertmonth < 10 ? "0" + convertmonth.toString() : convertmonth.toString();
+                let newDay = convertday < 10 ? "0" + convertday.toString() : convertday.toString();
 
-            let newdate = [year, newMonth, newDay].join("-");
-            let formattedDate = new Date(newdate);
+                let newdate = [convertyear, newMonth, newDay].join("-");
+                let formattedDate = new Date(newdate);
 
-            return formattedDate;
+                return formattedDate;
+                
+            } catch (error) {
+                log.error('Unexpected Error occurred', error);
+            }
         }
 
         function validateDonorEntry(donorData) {
-            let donorSearch = search.create({
-                type: 'customrecord_jj_blood_donor_detials',
-                filters: [
-                    ['custrecord_jj_first_name', 'is', donorData.fname],
-                    'AND',
-                    ['custrecord_jj_last_name', 'is', donorData.lname],
-                    'AND',
-                    ['custrecord_jj_phone_number', 'is', donorData.phono]
-                ],
-                columns: ['internalid']
-            });
+            try{
+                let donorSearch = search.create({
+                    type: 'customrecord_jj_blood_donor_detials',
+                    filters: [
+                        ['custrecord_jj_first_name', 'is', donorData.fname],
+                        'AND',
+                        ['custrecord_jj_last_name', 'is', donorData.lname],
+                        'AND',
+                        ['custrecord_jj_phone_number', 'is', donorData.phono]
+                    ],
+                    columns: ['internalid']
+                });
 
-            let existingDonor = false;
-            donorSearch.run().each(function (result) {
-                existingDonor = true;
-                return false;
-            });
+                let existingDonor = false;
+                donorSearch.run().each(function (result) {
+                    existingDonor = true;
+                    return false;
+                });
 
-            return existingDonor;
+                return existingDonor;
+            } catch (error) {
+                log.error('Unexpected Error occurred', error);
+            }
         }
 
         const createExternalDonorRecord = (donorData) => {
-            const lastDate = convertDate(donorData.lstdondate);
+            try{
+                const lastDate = convertDate(donorData.lstdondate);
 
-            const ExternalRecord = record.create({
-                type: 'customrecord_jj_blood_donor_detials'
-            });
+                const ExternalRecord = record.create({
+                    type: 'customrecord_jj_blood_donor_detials'
+                });
 
-            ExternalRecord.setValue({ fieldId: "custrecord_jj_first_name", value: donorData.fname });
-            ExternalRecord.setValue({ fieldId: "custrecord_jj_last_name", value: donorData.lname });
-            ExternalRecord.setValue({ fieldId: "custrecord_jj_gender", value: donorData.gender });
-            ExternalRecord.setValue({ fieldId: "custrecord_jj_phone_number", value: donorData.phono });
-            ExternalRecord.setValue({ fieldId: "custrecord_jj_bld_group", value: donorData.bldgrp });
-            ExternalRecord.setValue({ fieldId: "custrecord_jj_last_donation_date", value: lastDate });
+                ExternalRecord.setValue({ fieldId: "custrecord_jj_first_name", value: donorData.fname });
+                ExternalRecord.setValue({ fieldId: "custrecord_jj_last_name", value: donorData.lname });
+                ExternalRecord.setValue({ fieldId: "custrecord_jj_gender", value: donorData.gender });
+                ExternalRecord.setValue({ fieldId: "custrecord_jj_phone_number", value: donorData.phono });
+                ExternalRecord.setValue({ fieldId: "custrecord_jj_bld_group", value: donorData.bldgrp });
+                ExternalRecord.setValue({ fieldId: "custrecord_jj_last_donation_date", value: lastDate });
 
-            return ExternalRecord.save({ ignoreMandatory: true });
+                return ExternalRecord.save({ ignoreMandatoryFields: true });
+            } catch (error) {
+                log.error('Unexpected Error occurred', error);
+            }
         };
 
         return { onRequest };
