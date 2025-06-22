@@ -45,8 +45,9 @@ define(['N/log', 'N/record', 'N/ui/serverWidget', 'N/search'],
         const onRequest = (scriptContext) => {
             try {
                 if (scriptContext.request.method === 'GET') {
-                    const form = createDonorForm();
-                    scriptContext.response.writePage(form);
+                    const DonorDetails = createDonorForm();
+                    DonorDetails.clientScriptFileId = 1603;
+                    scriptContext.response.writePage(DonorDetails);
                 } else {
                     const donorData = {
                         fname: scriptContext.request.parameters.first_name,
@@ -71,50 +72,54 @@ define(['N/log', 'N/record', 'N/ui/serverWidget', 'N/search'],
         };
 
         const createDonorForm = () => {
-            const form = serverWidget.createForm({
-                title: 'External Donor form'
-            });
+            try{
+                const DonorDetails = serverWidget.createForm({
+                    title: 'External Donor form'
+                });
 
-            form.addField({
-                id: 'first_name',
-                type: serverWidget.FieldType.TEXT,
-                label: 'First Name'
-            }).isMandatory = true;
+                DonorDetails.addField({
+                    id: 'first_name',
+                    type: serverWidget.FieldType.TEXT,
+                    label: 'First Name'
+                }).isMandatory = true;
 
-            form.addField({
-                id: 'last_name',
-                type: serverWidget.FieldType.TEXT,
-                label: 'Last Name'
-            }).isMandatory = true;
+                DonorDetails.addField({
+                    id: 'last_name',
+                    type: serverWidget.FieldType.TEXT,
+                    label: 'Last Name'
+                }).isMandatory = true;
 
-            form.addField({
-                id: 'custpage_gender',
-                type: serverWidget.FieldType.SELECT,
-                label: 'Gender',
-                source: 'customlist_jj_gender'
-            }).isMandatory = true;
+                DonorDetails.addField({
+                    id: 'custpage_gender',
+                    type: serverWidget.FieldType.SELECT,
+                    label: 'Gender',
+                    source: 'customlist_jj_gender'
+                }).isMandatory = true;
 
-            form.addField({
-                id: 'custpage_phno',
-                type: serverWidget.FieldType.PHONE,
-                label: 'Phone Number'
-            }).isMandatory = true;
+                DonorDetails.addField({
+                    id: 'custpage_phno',
+                    type: serverWidget.FieldType.PHONE,
+                    label: 'Phone Number'
+                }).isMandatory = true;
 
-            form.addField({
-                id: 'blood_group',
-                type: serverWidget.FieldType.SELECT,
-                label: 'Blood Group',
-                source: 'customlist_jj_blood_grp'
-            }).isMandatory = true;
+                DonorDetails.addField({
+                    id: 'blood_group',
+                    type: serverWidget.FieldType.SELECT,
+                    label: 'Blood Group',
+                    source: 'customlist_jj_blood_grp'
+                }).isMandatory = true;
 
-            form.addField({
-                id: 'last_donation_date',
-                type: serverWidget.FieldType.DATE,
-                label: 'Last Donation Date'
-            }).isMandatory = true;
+                DonorDetails.addField({
+                    id: 'last_donation_date',
+                    type: serverWidget.FieldType.DATE,
+                    label: 'Last Donation Date'
+                }).isMandatory = true;
 
-            form.addSubmitButton({ label: 'Submit' });
-            return form;
+                DonorDetails.addSubmitButton({ label: 'Submit' });
+                return DonorDetails;
+            }catch(error){
+            log.error('Unexpected Error occurred', error);
+            }
         };
 
         function convertDate(date) {
