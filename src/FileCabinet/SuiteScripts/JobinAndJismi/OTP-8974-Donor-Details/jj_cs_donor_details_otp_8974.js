@@ -40,7 +40,7 @@ define(["N/log", "N/record"],
 
     function validateField(scriptContext) {
       try {
-        if (scriptContext.fieldId === "last_donation_date") {
+        if (scriptContext.fieldId === "custpage_last_donation_date") {
           dateManipulation(scriptContext);
         }
         if (scriptContext.fieldId === "custpage_phno") {
@@ -65,13 +65,13 @@ define(["N/log", "N/record"],
 
         const today = new Date();
         const lastdonationDate = scriptContext.currentRecord.getValue({
-          fieldId: "last_donation_date",
+          fieldId: "custpage_last_donation_date",
         });
 
         if (lastdonationDate > today) {
           alert("A donor cannot be saved with a future last donation date!");
           scriptContext.currentRecord.setValue({
-            fieldId: "last_donation_date",
+            fieldId: "custpage_last_donation_date",
             value: "",
           });
           return false;

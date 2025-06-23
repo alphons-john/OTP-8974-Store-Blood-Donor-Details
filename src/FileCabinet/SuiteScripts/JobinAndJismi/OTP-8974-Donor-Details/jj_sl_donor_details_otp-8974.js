@@ -50,12 +50,12 @@ define(['N/log', 'N/record', 'N/ui/serverWidget', 'N/search'],
                     scriptContext.response.writePage(DonorDetails);
                 } else {
                     const donorData = {
-                        fname: scriptContext.request.parameters.first_name,
-                        lname: scriptContext.request.parameters.last_name,
+                        fname: scriptContext.request.parameters.custpage_first_name,
+                        lname: scriptContext.request.parameters.custpage_last_name,
                         gender: scriptContext.request.parameters.custpage_gender,
                         phono: scriptContext.request.parameters.custpage_phno,
-                        bldgrp: scriptContext.request.parameters.blood_group,
-                        lstdondate: scriptContext.request.parameters.last_donation_date
+                        bldgrp: scriptContext.request.parameters.custpage_blood_group,
+                        lstdondate: scriptContext.request.parameters.custpage_last_donation_date
                     };
 
                     if (validateDonorEntry(donorData)) {
@@ -78,13 +78,13 @@ define(['N/log', 'N/record', 'N/ui/serverWidget', 'N/search'],
                 });
 
                 DonorDetails.addField({
-                    id: 'first_name',
+                    id: 'custpage_first_name',
                     type: serverWidget.FieldType.TEXT,
                     label: 'First Name'
                 }).isMandatory = true;
 
                 DonorDetails.addField({
-                    id: 'last_name',
+                    id: 'custpage_last_name',
                     type: serverWidget.FieldType.TEXT,
                     label: 'Last Name'
                 }).isMandatory = true;
@@ -103,14 +103,14 @@ define(['N/log', 'N/record', 'N/ui/serverWidget', 'N/search'],
                 }).isMandatory = true;
 
                 DonorDetails.addField({
-                    id: 'blood_group',
+                    id: 'custpage_blood_group',
                     type: serverWidget.FieldType.SELECT,
                     label: 'Blood Group',
                     source: 'customlist_jj_blood_grp'
                 }).isMandatory = true;
 
                 DonorDetails.addField({
-                    id: 'last_donation_date',
+                    id: 'custpage_last_donation_date',
                     type: serverWidget.FieldType.DATE,
                     label: 'Last Donation Date'
                 }).isMandatory = true;
