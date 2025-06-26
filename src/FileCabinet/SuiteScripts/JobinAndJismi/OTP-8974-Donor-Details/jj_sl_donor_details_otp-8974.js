@@ -124,16 +124,16 @@ define(['N/log', 'N/record', 'N/ui/serverWidget', 'N/search'],
 
         function convertDate(date) {
             try {
-                let convertdate = new Date(date);
-                let convertmonth = convertdate.getMonth() + 1;
-                let convertday = convertdate.getDate();
-                let convertyear = convertdate.getFullYear();
+                let formattingDate = new Date(date);
+                let formattingMonth = formattingDate.getMonth() + 1;
+                let formattingDay = formattingDate.getDate();
+                let formattingYear = formattingDate.getFullYear();
 
-                let newMonth = convertmonth < 10 ? "0" + convertmonth.toString() : convertmonth.toString();
-                let newDay = convertday < 10 ? "0" + convertday.toString() : convertday.toString();
+                let formatMonth = formattingMonth < 10 ? "0" + formattingMonth.toString() : formattingMonth.toString();
+                let formatDay = formattingDay < 10 ? "0" + formattingDay.toString() : formattingDay.toString();
 
-                let newdate = [convertyear, newMonth, newDay].join("-");
-                let formattedDate = new Date(newdate);
+                let formattDate = [formattingYear, formatMonth, formatDay].join("-");
+                let formattedDate = new Date(formattDate);
 
                 return formattedDate;
                 
